@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block body %}
+<br></br>
+<h1 class="page-header"> Marchandise de {{ chantier.nom }} </h1>
+<br></br>
+
+{% if (chantier.etat == "En cours") %}
+
+<h2 class="page-header"> Ajouter marchandise </h2>
+<br></br>
+  {{form_start(form)}}
+  {{form_widget(form)}}
+  {{form_end(form)}}
+<br></br>
+
+{% endif %}
+
+<body>
+<br></br>
+<table class="table table-stripped">
+    <thead class="thead-light">
+    <div class="row">
+     <div class="col-4">
+      <form class="pull-right hidden" role="search" id="nav-search-form" method="post" action="/personnels/chantier/consultermarchandise/search/{{ chantier.id }}">
+        <div class="input-group">
+          <input type="text" class="form-control" required="true" placeholder="Nom..." name ="search">
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-dark"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </span>
+        </div>
+      </form>
+    </div>
+     <div class="col-8"></div>
+   </div> 
+   <br></br>
+      <tr>
+        <th>Nom</th>
+        <th>Quantité</th>
+        {% if (chantier.etat == "En cours") %}
+        <th>Action</th>
+        {% else %}
+        <th>Quantite utilisé</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+
+          	{% for marchandise in marchandises %}
+
+          	<tr>
+		        <td>{{marchandise.nom}}</td>
+		        <td>{{marchandise.quantite}}</td>
+            {% if (chantier.etat == "En cours") %}
+		        <td><form method="post" role="plus" action="/personnels/chantier/consultermarchandise/plusmarchandise/{{ marchandise.id }}">
+                  <div class="input-group">
+                    <input type="text" required="true" name="plus" class="form-control" placeholder="00">
+                    <span class="input-group-btn">
+                    <button type="submit" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                    </span>
+                  </div>
+                </form>
+                <form method="post" role="minus" action="/personnels/chantier/consultermarchandise/minusmarchandise/{{ marchandise.id }}">
+                  <div class="input-group">
+                    <input type="text" required="true" name="minus" class="form-control" placeholder="00">
+                    <span class="input-group-btn">
+                    <button type="submit" class="btn btn-danger"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                    </span>
+                  </div>
+                </form>
+		        </td>
+            {% else %}
+            <td>
+              {{ marchandise.usedquantite }}
+            </td>
+            {% endif %}
+      		</tr>
+
+      		{% endfor %}
+
+    </tbody>
+  </table>
+  </body>
+{% endblock %}

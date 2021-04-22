@@ -1,0 +1,106 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: services.yml }
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: fr
+
+framework:
+    templating: { engines: ['twig'] }
+    esi: ~
+    translator: { fallbacks: ['%locale%'] }
+    secret: '%secret%'
+    router:
+        resource: '%kernel.project_dir%/app/config/routing.yml'
+        strict_requirements: ~
+    form: ~
+    csrf_protection: ~
+    validation: { enable_annotations: true }
+    #serializer: { enable_annotations: true }
+    default_locale: '%locale%'
+    trusted_hosts: ~
+    session:
+        # https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
+        handler_id: session.handler.native_file
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+    fragments: ~
+    http_method_override: true
+    assets: ~
+    php_errors:
+        log: true
+
+# Twig Configuration
+twig:
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver: pdo_mysql
+        host: '%database_host%'
+        port: '%database_port%'
+        dbname: '%database_name%'
+        user: '%database_user%'
+        password: '%database_password%'
+        charset: UTF8
+        # if using pdo_sqlite as your database driver:
+        #   1. add the path in parameters.yml
+        #     e.g. database_path: '%kernel.project_dir%/var/data/data.sqlite'
+        #   2. Uncomment database_path in parameters.yml.dist
+        #   3. Uncomment next line:
+        #path: '%database_path%'
+
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: smtp
+    host: localhost
+    username: noreply
+    password: noreply
+    spool: { type: memory }
+
+sensio_framework_extra:
+   router:
+        annotations: false
+#fosbundle
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: AppBundle\Entity\User
+    from_email:
+        address: "hello@aquanote.com"
+        sender_name: "AquaNote Postman"
+    registration:
+        form:
+           type: AppBundle\Form\RegistrationType
+        confirmation:
+            enabled: true
+
+#easyadmin
+easy_admin:
+   site_name: 'Administration'
+   design:
+       brand_color: '#cccccc'
+       color_scheme: 'light'
+   entities:
+       User:
+           class: AppBundle\Entity\User
+           list:
+               fields:
+                   - username
+                   - email
+                   - enabled
+           form:
+               fields:
+                   - email                
+                   - username
+                   - { property: 'plainPassword', type: 'text', type_options: { required: false } }
+                   - { property: 'roles', type: 'choice', type_options: { multiple: true, choices: { ROLE_USER: 'ROLE_USER', ROLE_ADMIN: 'ROLE_ADMIN' } } }

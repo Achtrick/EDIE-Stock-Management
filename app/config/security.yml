@@ -1,0 +1,40 @@
+# To get started with security, check out the documentation:
+# https://symfony.com/doc/current/security.html
+security:
+    encoders:
+        AppBundle\Entity\User: bcrypt
+    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username
+        in_memory:
+            memory: ~
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+
+    firewalls:
+        main:
+            pattern: ^/
+            user_checker: security.user_checker
+            form_login:
+                provider: fos_userbundle
+                csrf_token_generator: security.csrf.token_manager
+
+            logout:       true
+            anonymous:    true
+
+    access_control:
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: ROLE_ADMIN }
+        - { path: ^/resetting, role: ROLE_ADMIN }
+        - { path: ^/admin/, role: ROLE_ADMIN }
+        - { path: ^/personnels/, role: ROLE_USER }
+        - { path: "searchmarchandise", role: ROLE_USER }
+        - { path: "consultermarchandise", role: ROLE_USER }
+        - { path: "plusmarchandise", role: ROLE_USER }
+        - { path: "minusmarchandise", role: ROLE_USER }
+        - { path: "créerchantier", role: ROLE_USER }
+        - { path: "consulterchantier", role: ROLE_USER }
+        - { path: "searchchantier", role: ROLE_USER }

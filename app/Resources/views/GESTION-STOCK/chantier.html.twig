@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block body %}
+<br></br>
+<h1 class="page-header"> Chantiers de {{ app.user.username }} </h1>
+<br></br>
+
+<body>
+<br></br>
+<table class="table table-stripped">
+    <thead class="thead-light">
+    <div class="row">
+     <div class="col-4">
+      <form class="pull-right hidden" role="search" id="nav-search-form" method="post" action="{{ path('searchchantier') }}">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Nom..." name ="search">
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-dark"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </span>
+        </div>
+      </form>
+    </div>
+     <div class="col-8"></div>
+   </div> 
+   <br></br>
+      <tr>
+        <th>Nom</th>
+        <th>Date début</th>
+        <th>Etat</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+
+          	{% for chantier in chantiers %}
+
+          	<tr>
+		        <td>{{chantier.nom}}</td>
+		        <td>{{chantier.datedebut}}</td>
+		        <td>
+              {% if (chantier.etat == "En cours") %}
+              <a href="/personnels/chantier/modifierchantier/{{chantier.id}}" class="btn btn-warning"><i class="fas fa-times"></i> Fermer chantier</a>
+              {% else %}
+              {{chantier.etat}}
+              {% endif %}
+            </td>
+		        <td><a href="/personnels/chantier/consultermarchandise/{{chantier.id}}/" class="btn btn-info"><i class="fas fa-eye"></i> Consulter marchandise</a>
+		        </td>
+      		</tr>
+
+      		{% endfor %}
+
+    </tbody>
+  </table>
+  </body>
+{% endblock %}
